@@ -35,9 +35,18 @@ int main(int argc, char const* argv[]) {
   InitializeMagick(*argv);
   // TODO: Process the command line arguemnts. Save args.at(1) to 
   // output_file_name and args.at(2) to message.
+  vector<string> args = vector<string>(argv, argv + argc);
+
   string output_file_name;
   string message;
-
+ try {
+    output_file_name = (args.at(1));
+    message = (args.at(2));
+  } catch (exception const &problem) {
+    cout << "Ran into problem getting the arguments. \n";
+    cout << problem.what() << "\n";
+    return 1;
+  }
   // Check to make sure the user specified a GIF/gif file.
   if (not HasFileExtension(output_file_name, ".gif") &&
       not HasFileExtension(output_file_name, ".GIF")) {
@@ -72,7 +81,7 @@ int main(int argc, char const* argv[]) {
        << image.rows() << " rows (y direction).\n";
 
   // TODO: Define a const int named kNumberOfImages and assign it 10.
-
+const int kNumberOfImages = 10; 
   // This vector will store each frame of our animated GIF.
   vector<Image> images;
 
@@ -83,7 +92,7 @@ int main(int argc, char const* argv[]) {
 
   // TODO: Write a triply nested for loop.
   //  - The outer most loop is the loop that controls how many images are
-  //    created.
+  //    created. 0-9
   //  - The middle loop is for each column in the image
   //  - The inner most loop is for each row in the image
 
@@ -93,14 +102,13 @@ int main(int argc, char const* argv[]) {
   // be true and if it isn't then the program is going to halt with an
   // error message. If your program halts, then you know you have
   // something wrong with your for loop counters.
-  // assert(row < image.rows());
-  // assert(column < image.columns());
 
 
   // The random_value is the intensity of the color at the
   // current pixel. Flip a coin to decide which channel is active.
   // It could be zero, one, two, or three channels that are assigned
   // random_value.
+
   double random_color_intensity = RandomDouble_01();
   double red = 0.0;
   double green = 0.0;
@@ -133,12 +141,45 @@ int main(int argc, char const* argv[]) {
   // images.push_back(image);
 
   // Our work is done, save the ending time
+
+
+    for (int images_counter = 0; images_counter < 10; images_counter++){
+
+        for(int column = 0; column < image.columns(); column++ )  { 
+          for(int row = 0; row < image.rows(); row++ ) {
+              assert(row < image.rows());
+              assert(column < image.columns());
+
+   double random_color_intensity = RandomDouble_01();
+  double red = 0.0;
+  double green = 0.0;
+  double blue = 0.0;
+
+    if (RandomDouble_01()) {
+    red = random_color_intensity;}
+    if (RandomDouble_01()) {
+    green = random_color_intensity;}
+    if (RandomDouble_01()) {
+    blue = random_color_intensity;}
+
+    ColorRGB pixel_color(red, green, blue);
+    image.pixelColor(column, row, pixel_color); 
+}
+}
+image.font("Helvetica");
+image.fontPointsize(72);
+image.fillColor(Color("yellow"));
+image.annotate(message, CenterGravity);
+// push the image into the vector named images
+images.push_back(image);
+
+    }
   chrono::time_point<chrono::high_resolution_clock> end =
       chrono::high_resolution_clock::now();
 
   // TODO: Write the images to an output file, for example
   // writeImages(images.begin(), images.end(), output_file_name);
-
+writeImages(images.begin(), images.end(), output_file_name);
   // Calculate the elapsed time by taking the difference between end
   // and start.
   chrono::duration<double> elapsed_seconds = end - start;
