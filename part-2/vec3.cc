@@ -1,30 +1,51 @@
-
+// Isaac Stumps
+// CPSC 120-18
+// 2021-11-22
+// istumps@csu.fullerton.edu
+// @istumps
+//
+// Lab 11-01
+//
+// Program to make an image using vectors 
+//
 #include "vec3.h"
 
 // See the header file for documentation.
 
 [[nodiscard]] double Vec3::x() const {
+    return x_;
   // TODO: Implement this member function given the documentation in vec3.h
 }
 
 [[nodiscard]] double Vec3::y() const {
+   return y_;
   // TODO: Implement this member function given the documentation in vec3.h
 }
 
 [[nodiscard]] double Vec3::z() const {
+   return z_;  
   // TODO: Implement this member function given the documentation in vec3.h
 }
 
 Vec3 Vec3::operator-() const {
-  // TODO: Implement this member function given the documentation in vec3.h
+  return Vec3(-x_, -y_, -z_);  
 }
 
 double Vec3::operator[](int i) const noexcept(false) {
   double rv = NAN;
-  // TODO: Implement this member function given the documentation in vec3.h
-  return rv;
+  if (i == 0) {
+    return x_;
+  } else if (i == 1) {
+    return y_;
+  } else if (i == 2) {
+    return z_;
+  } else {
+    throw std::out_of_range("Index out of range. Must be between 0 and 2.");
+  
 }
-
+    return rv;
+  // TODO: Implement this member function given the documentation in vec3.h
+}
 double& Vec3::operator[](int i) noexcept(false) {
   // Yes, this will generate a linter warning:
   // readability-else-after-return
@@ -47,35 +68,43 @@ double& Vec3::operator[](int i) noexcept(false) {
 // For the sake of CPSC 120, we will leave this as a member function
 // although it is better off being a static class function.
 [[nodiscard]] int Vec3::size() const {
+  return kSize_;
   // TODO: Implement this member function given the documentation in vec3.h
 }
 
-[[nodiscard]] double Vec3::length() const {
+[[nodiscard]] double Vec3::length() const { 
+  return std::sqrt(length_squared());
   // TODO: Implement this member function given the documentation in vec3.h
 }
 
 [[nodiscard]] double Vec3::length_squared() const {
+  return ((x_ * x_ )+ (y_ * y_) + (z_ * z_));
   // TODO: Implement this member function given the documentation in vec3.h
 }
 
 std::ostream& operator<<(std::ostream& out, const Vec3& v) {
-  // TODO: Implement this member function given the documentation in vec3.h
+    out << "(" << v.x() << ", " << v.y() << ", " << v.z() << ")";
+
   return out;
 }
 
 Vec3 operator+(const Vec3& lhs, const Vec3& rhs) {
+  return Vec3(lhs.x() + rhs.x(), lhs.y() + rhs.y(), lhs.z() + rhs.z()); 
   // TODO: Implement this member function given the documentation in vec3.h
 }
 
 Vec3 operator-(const Vec3& lhs, const Vec3& rhs) {
+  return Vec3(lhs.x() - rhs.x(), lhs.y() - rhs.y(), lhs.z() - rhs.z());
   // TODO: Implement this member function given the documentation in vec3.h
 }
 
 Vec3 operator*(double lhs, const Vec3& rhs) {
+  return Vec3(lhs * rhs.x(), lhs * rhs.y(), lhs * rhs.z());
   // TODO: Implement this member function given the documentation in vec3.h
 }
 
 Vec3 operator*(const Vec3& lhs, double rhs) {
+  return Vec3(rhs * lhs.x(), rhs * lhs.y(), rhs * lhs.z());
   // TODO: Implement this member function given the documentation in vec3.h
 }
 
@@ -100,10 +129,13 @@ bool operator==(const Vec3& lhs, const Vec3& rhs) {
 bool operator!=(const Vec3& lhs, const Vec3& rhs) { return not(lhs == rhs); }
 
 double Dot(const Vec3& u, const Vec3& v) {
+  return (u.x() * v.x() + u.y() * v.y() + u.z() * v.z()); 
   // TODO: Implement this member function given the documentation in vec3.h
 }
 
 Vec3 Cross(const Vec3& u, const Vec3& v) {
+  return Vec3{u.y() * v.z() - u.z() * v.y(), u.z() * v.x() - u.x() * v.z(),
+              u.x() * v.y() - u.y() * v.x()};
   // TODO: Implement this member function given the documentation in vec3.h
 }
 

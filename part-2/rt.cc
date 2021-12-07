@@ -29,12 +29,16 @@ using namespace Magick;
 /// \param r A ray eminating from the camera through the scene
 /// \returns The color visible from that ray
 ColorRGB RayColor(const Ray& r) {
-  ColorRGB c;
+ 
   // Greenish brown
   ColorRGB sky_top(.5, .4, 0);
   // Bluish purple
   ColorRGB sky_bottom(.2, .1, .5);
+   Vec3 unit_direction = UnitVector(r.direction());
+  double t = 0.5 * (unit_direction.y() + 1.0);
+  ColorRGB c = (1.0 - t) * sky_top + t * sky_bottom;
   // TODO: Calculate the color c that is visible to Ray r.
+
   return c;
 }
 
@@ -45,9 +49,16 @@ ColorRGB RayColor(const Ray& r) {
 int main(int argc, char const* argv[]) {
   InitializeMagick(*argv);
   // TODO: Process the command line arguemnts. Save args.at(1) to
-  // output_file_name.
+  // output_file_name
+  vector<string> args = vector<string>(argv, argv + argc);
   string output_file_name;
-
+ try {
+    output_file_name = (args.at(1));
+  } catch (exception const &problem) {
+    cout << "Ran into problem getting the arguments. \n";
+    cout << problem.what() << "\n";
+    return 1;
+  }
   /// Image definition in main
   /// The image is the output from the virtual camera. The image is what
   /// you will see when you open the output in an image viewer. The image's
@@ -123,7 +134,20 @@ int main(int argc, char const* argv[]) {
   //    created.
   //  - The middle loop is for each column in the image
   //  - The inner most loop is for each row in the image
-
+  for(int column = 0; column < image.columns(); column++ ) { 
+     for(int row = 0; row < image.rows(); row++ ) {
+              assert(row < image.rows());
+              assert(column < image.columns());
+              double u = NAN;
+              u = double (column) / image.columns() -1;
+              double v = NAN;
+             v = double (row) / image.rows() -1;
+            Ray r(kOrigin, kLowerLeftCorner + u * kHorizontal + v * kVertical - kOrigin); 
+           ColorRGB pixel_color;
+           pixel_color = RayColor(r);
+           image.pixelColor(column, row, pixel_color);
+          }
+   }
   // Use this at the top of your inner most for loop to help catch errors.
   // This is a way to make sure you don't accidentally have the wrong
   // logic in your for loops. What an assertion does is it says this must
@@ -145,26 +169,24 @@ int main(int argc, char const* argv[]) {
   // The same is true for v
   // TODO: Assign u as the ratio of the current column to the total number of
   // columns.
-  double u = NAN;
+  
   // TODO: Assign v as the ratio of the current row to the total number of rows.
-  double v = NAN;
 
   // TODO: Declare and construct Ray r that starts at the camera's center,
   // the origin (kOrigin), and travels through the pixel center defined by
   // kLowerLeftCorner + u * kHorizontal + v * kVertical - kOrigin
-  Ray r;
+
 
   // TODO: Calculate and return the color at the pixel that Ray r
   // points through and assign it to pixel_color. Use the
   // fucntion RayColor()
-  ColorRGB pixel_color;
-
+ 
   // It may help you to debug what you are doing by printing
   // each pixel out. Remember you can always resize the image to be
   // something smaller by changing kImageWidth and recompiling.
   // Remember column is the x direction and row is the y direction.
   // cout << column << ":" << row << " " << pixel_color << "\n";
-
+ 
   // TODO: Set the color for pixel(row, column) to the calculated color,
   // for example: image.pixelColor(column, row, pixel_color);
 
@@ -173,8 +195,7 @@ int main(int argc, char const* argv[]) {
       chrono::high_resolution_clock::now();
 
   // TODO: Write the images to an output file, for example
-  // image.write(output_file_name);
-
+  image.write(output_file_name);
   // Calculate the elapsed time by taking the difference between end
   // and start.
   chrono::duration<double> elapsed_seconds = end - start;
