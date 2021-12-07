@@ -1,4 +1,13 @@
-
+// Isaac Stumps
+// CPSC 120-18
+// 2021-12-6
+// istumps@csu.fullerton.edu
+// @istumps
+//
+// Lab 12-02
+//
+// Program to make a dynamic image using vectors
+//
 /// \file
 
 #include <Magick++.h>

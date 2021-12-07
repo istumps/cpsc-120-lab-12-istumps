@@ -1,12 +1,12 @@
 // Isaac Stumps
 // CPSC 120-18
-// 2021-11-22
+// 2021-12-6
 // istumps@csu.fullerton.edu
 // @istumps
 //
-// Lab 11-01
+// Lab 12-02
 //
-// Program to make an image using vectors
+// Program to make a dynamic image using vectors
 //
 #include "vec3.h"
 
